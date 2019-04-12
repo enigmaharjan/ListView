@@ -2,18 +2,26 @@ package com.s.listview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String countries[]={
-        "Nepal",
-        "US",
-        "China",
-        "UK",
-        "Canada"
+        "Nepal","Kathmandu",
+        "US","Washington D.C.",
+        "China","Beijing",
+        "UK","London",
+        "Canada","Ottawa"
     };
+    private Map<String,String> dictionary;
 
     private ListView ltCountries;
 
@@ -23,11 +31,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ltCountries = findViewById(R.id.stCountries);
 
+        dictionary = new HashMap<>();
+        for(int i = 0;i<countries.length;i+=2){
+            dictionary.put(countries[i],countries[i+1]);
+        }
+
         ArrayAdapter countriesAdapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1, countries
+                android.R.layout.simple_list_item_1,
+                new ArrayList<String>(dictionary.keySet())
         );
         ltCountries.setAdapter(countriesAdapter);
+
+        ltCountries.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String country = parent.getItemAtPosition(position).toString();
+            String capital = dictionary.get(country);
+                Toast.makeText(getApplicationContext(),capital.toString(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        );
     }
 }
 
